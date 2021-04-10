@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wK1Y4WNbcp4eB+U9/MzbCvoh9nihBNWeyaHSF7WWzkGyPiQd2GmyWqwjaDOLXBHvAzU/UNGcYKXsBqJbs5kqyw==",
+  "dgSpecHash": "0+kDoR12CIXIPdUy0iTClS97nGgcrbvwigOUPDLco8Pmc5YLFHvPqdgRs7uvryEdDIk2bFzbN0j5c/3XYxRHBg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\User\\Desktop\\Memo\\shopapp\\shopapp.entity\\shopapp.entity.csproj",
+  "projectFilePath": "C:\\Users\\User\\Documents\\GitHub\\E-commerce-Website-with-ASP-.NET-MVC-3.1\\shopapp\\shopapp.entity\\shopapp.entity.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
