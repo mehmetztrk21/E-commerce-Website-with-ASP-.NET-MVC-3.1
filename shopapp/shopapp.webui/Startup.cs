@@ -31,7 +31,9 @@ namespace shopapp.webui
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options=> options.UseSqlite("Data Source=shopDb"));
+            services.AddDbContext<ApplicationContext>(options=> options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
+            services.AddDbContext<ShopContext>(options=> options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
+            
             services.AddIdentity<User,IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options=> {
@@ -66,11 +68,8 @@ namespace shopapp.webui
                     SameSite = SameSiteMode.Strict
                 };
             });
-
-            services.AddScoped<ICategoryRepository,EfCoreCategoryRepository>(); 
-            services.AddScoped<IProductRepository,EfCoreProductRepository>(); 
-            services.AddScoped<ICartRepository,EfCoreCartRepository>(); 
-            services.AddScoped<IOrderRepository,EfCoreOrderRepository>(); 
+         
+            services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             services.AddScoped<IProductService,ProductManager>(); 
             services.AddScoped<ICategoryService,CategoryManager>(); 
@@ -88,7 +87,7 @@ namespace shopapp.webui
 
             services.AddControllersWithViews();
         }
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IConfiguration configuration,UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IConfiguration configuration,UserManager<User> userManager, RoleManager<IdentityRole> roleManager, ICartService cartService)
         {
             app.UseStaticFiles(); // wwwroot
 
@@ -101,7 +100,6 @@ namespace shopapp.webui
 
             if (env.IsDevelopment())
             {
-                SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
 
@@ -224,7 +222,7 @@ namespace shopapp.webui
                 );
             });
        
-            SeedIdentity.Seed(userManager,roleManager,configuration).Wait();
+            SeedIdentity.Seed(userManager,roleManager,cartService,configuration).Wait();
         }
     }
 }

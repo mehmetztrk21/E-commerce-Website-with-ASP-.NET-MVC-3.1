@@ -14,7 +14,7 @@ namespace shopapp.business.Abstract
         List<Product> GetHomePageProducts();
         List<Product> GetSearchResult(string searchString);
         List<Product> GetAll();
-        bool Create(Product entity,int[] categoryIds);
+        bool Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);
         bool Update(Product entity, int[] categoryIds);

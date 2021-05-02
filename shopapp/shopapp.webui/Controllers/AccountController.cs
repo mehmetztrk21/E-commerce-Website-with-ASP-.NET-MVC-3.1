@@ -89,10 +89,9 @@ namespace shopapp.webui.Controllers
                 UserName = model.UserName,
                 Email = model.Email    
             };           
-            var result = await _userManager.CreateAsync(user,model.Password);
-            var result2=await _userManager.AddToRoleAsync(user,"Customer");
 
-            if(result.Succeeded && result2.Succeeded)
+            var result = await _userManager.CreateAsync(user,model.Password);
+            if(result.Succeeded)
             {
                 // generate token
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

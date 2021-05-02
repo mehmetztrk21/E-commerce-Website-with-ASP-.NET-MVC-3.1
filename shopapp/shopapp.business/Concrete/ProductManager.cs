@@ -8,76 +8,75 @@ namespace shopapp.business.Concrete
 {
     public class ProductManager : IProductService
     {
-        private IProductRepository _productRepository;
-        public ProductManager(IProductRepository productRepository)
+
+         private readonly IUnitOfWork _unitofwork;
+        public ProductManager(IUnitOfWork unitofwork)
         {
-            _productRepository = productRepository;
+            _unitofwork = unitofwork;
         }
 
-        public bool Create(Product entity,int[] categoryIds)
+        public bool Create(Product entity)
         {
             if(Validation(entity))
-            {
-                if(categoryIds.Length==0)
-                {
-                    ErrorMessage += "Ürün için en az bir kategori seçmelisiniz.";
-                    return false;
-                }
-                 _productRepository.Create(entity,categoryIds);
+            {       
+                _unitofwork.Products.Create(entity);
+                _unitofwork.Save();
                 return true;
             }
-            return false;          
+            return false;
         }
 
         public void Delete(Product entity)
         {
             // iş kuralları
-            _productRepository.Delete(entity);
+            _unitofwork.Products.Delete(entity);
+            _unitofwork.Save();
         }
 
         public List<Product> GetAll()
         {            
-            return _productRepository.GetAll();
+            return _unitofwork.Products.GetAll();
         }
 
         public Product GetById(int id)
         {
-            return _productRepository.GetById(id);
+            return _unitofwork.Products.GetById(id);
         }
 
         public Product GetByIdWithCategories(int id)
         {
-            return _productRepository.GetByIdWithCategories(id);
+            return _unitofwork.Products.GetByIdWithCategories(id);
         }
 
         public int GetCountByCategory(string category)
         {
-            return _productRepository.GetCountByCategory(category);
+            return _unitofwork.Products.GetCountByCategory(category);
         }
 
         public List<Product> GetHomePageProducts()
         {
-           return _productRepository.GetHomePageProducts();
+           return _unitofwork.Products.GetHomePageProducts();
         }
 
         public Product GetProductDetails(string url)
         {
-            return _productRepository.GetProductDetails(url);
+            return _unitofwork.Products.GetProductDetails(url);
         }
 
         public List<Product> GetProductsByCategory(string name,int page,int pageSize)
         {
-            return _productRepository.GetProductsByCategory(name,page,pageSize);
+            return _unitofwork.Products.GetProductsByCategory(name,page,pageSize);
         }
 
         public List<Product> GetSearchResult(string searchString)
         {
-           return _productRepository.GetSearchResult(searchString);
+           return _unitofwork.Products.GetSearchResult(searchString);
         }
 
         public void Update(Product entity)
         {            
-            _productRepository.Update(entity);
+            _unitofwork.Products.Update(entity);
+            _unitofwork.Save();
         }
 
         public bool Update(Product entity, int[] categoryIds)
@@ -89,7 +88,8 @@ namespace shopapp.business.Concrete
                     ErrorMessage += "Ürün için en az bir kategori seçmelisiniz.";
                     return false;
                 }
-                 _productRepository.Update(entity,categoryIds);
+                 _unitofwork.Products.Update(entity,categoryIds);
+                 _unitofwork.Save();
                 return true;
             }
             return false;          

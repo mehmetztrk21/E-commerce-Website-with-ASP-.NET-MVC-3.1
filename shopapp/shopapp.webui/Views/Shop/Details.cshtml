@@ -16,38 +16,24 @@
                 <h4 class="text-primary mb-3">
                     <i class="fas fa-lira-sign"></i>@Model.Product.Price
                 </h4>
-                 @if(User.IsInRole("admin")){
-                    <form class="form-inline">
-                    <input type="hidden" name="productId" value="@Model.Product.ProductId">
-                    <div class="input-group mb-3">
-                        <input type="number" name="quantity" class="form-control" value="1" min="1" step="1" style="width: 100px;">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-cart-plus"></i>&nbsp Sepete ekle                               
-                            </button>
-                        </div>
-                    </div>     
-                </form>
-                 }
-                 else{
+                
                 <form asp-controller="Cart" asp-action="AddToCart" method="POST" class="form-inline">
                     <input type="hidden" name="productId" value="@Model.Product.ProductId">
                     <div class="input-group mb-3">
                         <input type="number" name="quantity" class="form-control" value="1" min="1" step="1" style="width: 100px;">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-cart-plus"></i>&nbsp Sepete ekle                               
+                                <i class="fas fa-cart-plus"></i>Sepete Ekle                              
                             </button>
                         </div>
                     </div>     
+               
                 </form>
-                 }
             </h6>
     </div>
 </div>
-<div class="row mt-5" style="width: 70%;">
-    <div class="col-md-12" style="border: 2px solid lightgray;word-wrap:break-word;" >
-        <p class="pt-3 pl-2" style="color: lightsteelblue;">@Model.Product.Name</p>
-        <p class="pt-1" style="word-wrap:break-word;">@Html.Raw(Model.Product.Description) Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit repellat odit cumque explicabo vel voluptatem praesentium. Eveniet odio vel itaque adipisci? Laudantium, magni eligendi facere quis minus doloribus vel ratione praesentium possimus et iste tenetur dignissimos autem similique fuga asperiores cum officia suscipit numquam reiciendis tempore blanditiis cumque at. Nisi!</p>
+<div class="row">
+    <div class="col-md-12 p-5">
+        <p class="p-3">@Html.Raw(Model.Product.Description)</p>
     </div>
 </div>

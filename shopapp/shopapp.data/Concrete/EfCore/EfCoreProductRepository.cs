@@ -7,82 +7,59 @@ using shopapp.entity;
 namespace shopapp.data.Concrete.EfCore
 {
     public class EfCoreProductRepository :
-        EfCoreGenericRepository<Product, ShopContext>, IProductRepository
+        EfCoreGenericRepository<Product>, IProductRepository
     {
-        public void Create(Product entity, int[] categoryIds)
+        public EfCoreProductRepository(ShopContext context): base(context)
         {
-          
-
-             using(var context = new ShopContext())
-            {
-
-                 entity.ProductCategories = categoryIds.Select(catid=>new ProductCategory()
-                    {
-                        ProductId=entity.ProductId,
-                        CategoryId = catid
-                    }).ToList();
-
-                    context.Products.Add(entity);
-
-                    context.SaveChanges();
-                
-            }
+            
         }
 
+        private ShopContext ShopContext
+        {
+            get {return context as ShopContext; }
+        }
         public Product GetByIdWithCategories(int id)
         {
-            using(var context = new ShopContext())
-            {
-                return context.Products
-                                .Where(i=>i.ProductId == id)
-                                .Include(i=>i.ProductCategories)
-                                .ThenInclude(i=>i.Category)
-                                .FirstOrDefault();
-            }
+            return ShopContext.Products
+                            .Where(i=>i.ProductId == id)
+                            .Include(i=>i.ProductCategories)
+                            .ThenInclude(i=>i.Category)
+                            .FirstOrDefault();
         }
 
         public int GetCountByCategory(string category)
         {
-           using (var context = new ShopContext())
+          
+            var products = ShopContext.Products.Where(i=>i.IsApproved).AsQueryable();
+
+            if(!string.IsNullOrEmpty(category))
             {
-                var products = context.Products.Where(i=>i.IsApproved).AsQueryable();
-
-                if(!string.IsNullOrEmpty(category))
-                {
-                    products = products
-                                    .Include(i=>i.ProductCategories)
-                                    .ThenInclude(i=>i.Category)
-                                    .Where(i=>i.ProductCategories.Any(a=>a.Category.Url == category));
-                }
-
-                return products.Count();
+                products = products
+                                .Include(i=>i.ProductCategories)
+                                .ThenInclude(i=>i.Category)
+                                .Where(i=>i.ProductCategories.Any(a=>a.Category.Url == category));
             }
+
+            return products.Count();
+           
         }
         public List<Product> GetHomePageProducts()
         {
-            using (var context = new ShopContext())
-            {
-                return context.Products
-                    .Where(i=>i.IsApproved && i.IsHome).ToList();
-            }
+            return ShopContext.Products
+                .Where(i=>i.IsApproved && i.IsHome).ToList();
         }
         public Product GetProductDetails(string url)
         {
-            using (var context = new ShopContext())
-            {
-                return context.Products
+                return ShopContext.Products
                                 .Where(i=>i.Url==url)
                                 .Include(i=>i.ProductCategories)
                                 .ThenInclude(i=>i.Category)
                                 .FirstOrDefault();
 
-            }
         }
         public List<Product> GetProductsByCategory(string name,int page,int pageSize)
         {
-            using (var context = new ShopContext())
-            {
-                var products = context
+                var products = ShopContext
                     .Products
                     .Where(i=>i.IsApproved)
                     .AsQueryable();
@@ -96,26 +73,20 @@ namespace shopapp.data.Concrete.EfCore
                 }
 
                 return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
-            }
         }
         public List<Product> GetSearchResult(string searchString)
         {
-            using (var context = new ShopContext())
-            {
-                var products = context
+                var products = ShopContext
                     .Products
                     .Where(i=>i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())))
                     .AsQueryable();
 
                 return products.ToList();
-            }
         }
 
         public void Update(Product entity, int[] categoryIds)
         {
-            using(var context = new ShopContext())
-            {
-                var product = context.Products
+                var product = ShopContext.Products
                                     .Include(i=>i.ProductCategories)
                                     .FirstOrDefault(i=>i.ProductId==entity.ProductId);
 
@@ -136,9 +107,7 @@ namespace shopapp.data.Concrete.EfCore
                         CategoryId = catid
                     }).ToList();
 
-                    context.SaveChanges();
                 }
-            }
         }
     }
 }

@@ -9,7 +9,7 @@ using shopapp.data.Concrete.EfCore;
 namespace shopapp.data.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20210223111008_InitialCreate")]
+    [Migration("20210304192138_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,9 @@ namespace shopapp.data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Url")
                         .HasColumnType("TEXT");
@@ -71,6 +73,32 @@ namespace shopapp.data.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Telefon",
+                            Url = "telefon"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "Bilgisayar",
+                            Url = "bilgisayar"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Elektronik",
+                            Url = "elektronik"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            Name = "Beyaz Eşya",
+                            Url = "beyaz-esya"
+                        });
                 });
 
             modelBuilder.Entity("shopapp.entity.Order", b =>
@@ -159,6 +187,11 @@ namespace shopapp.data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("DateAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("date('now')");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -172,7 +205,9 @@ namespace shopapp.data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(100);
 
                     b.Property<double?>("Price")
                         .HasColumnType("REAL");
@@ -183,6 +218,68 @@ namespace shopapp.data.Migrations
                     b.HasKey("ProductId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = 1,
+                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "iyi telefon",
+                            ImageUrl = "1.jpg",
+                            IsApproved = true,
+                            IsHome = false,
+                            Name = "Samsung S5",
+                            Price = 2000.0,
+                            Url = "samsung-s5"
+                        },
+                        new
+                        {
+                            ProductId = 2,
+                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "iyi telefon",
+                            ImageUrl = "2.jpg",
+                            IsApproved = false,
+                            IsHome = false,
+                            Name = "Samsung S6",
+                            Price = 3000.0,
+                            Url = "samsung-s6"
+                        },
+                        new
+                        {
+                            ProductId = 3,
+                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "iyi telefon",
+                            ImageUrl = "3.jpg",
+                            IsApproved = true,
+                            IsHome = false,
+                            Name = "Samsung S7",
+                            Price = 4000.0,
+                            Url = "samsung-s7"
+                        },
+                        new
+                        {
+                            ProductId = 4,
+                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "iyi telefon",
+                            ImageUrl = "4.jpg",
+                            IsApproved = false,
+                            IsHome = false,
+                            Name = "Samsung S8",
+                            Price = 5000.0,
+                            Url = "samsung-s8"
+                        },
+                        new
+                        {
+                            ProductId = 5,
+                            DateAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "iyi telefon",
+                            ImageUrl = "5.jpg",
+                            IsApproved = true,
+                            IsHome = false,
+                            Name = "Samsung S9",
+                            Price = 6000.0,
+                            Url = "samsung-s9"
+                        });
                 });
 
             modelBuilder.Entity("shopapp.entity.ProductCategory", b =>
@@ -198,6 +295,58 @@ namespace shopapp.data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            CategoryId = 1,
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            ProductId = 3
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            CategoryId = 1,
+                            ProductId = 5
+                        });
                 });
 
             modelBuilder.Entity("shopapp.entity.CartItem", b =>

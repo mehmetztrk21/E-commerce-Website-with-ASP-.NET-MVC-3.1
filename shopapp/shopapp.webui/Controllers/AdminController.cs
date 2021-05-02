@@ -205,12 +205,11 @@ namespace shopapp.webui.Controllers
         }
         public IActionResult ProductCreate()
         {
-             ViewBag.Categories = _categoryService.GetAll();
             return View();
         }
 
         [HttpPost]
-          public async Task<IActionResult> ProductCreate(ProductModel model,int[] categoryIds,IFormFile file)
+        public IActionResult ProductCreate(ProductModel model)
         {
             if(ModelState.IsValid)
             {
@@ -220,25 +219,10 @@ namespace shopapp.webui.Controllers
                     Url = model.Url,
                     Price = model.Price,
                     Description = model.Description,
-                    IsApproved=model.IsApproved,
-                    IsHome=model.IsHome,
+                    ImageUrl = model.ImageUrl
                 };
-
-
-                  if(file!=null)
-                {
-                    var extention = Path.GetExtension(file.FileName);
-                    var randomName = string.Format($"{Guid.NewGuid()}{extention}");
-                    entity.ImageUrl = randomName;
-                    var path = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot\\img",randomName);
-
-                    using(var stream = new FileStream(path,FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                }
-            
-                if(_productService.Create(entity,categoryIds))
+                
+                if(_productService.Create(entity))
                 {                    
                     TempData.Put("message", new AlertMessage()
                     {
@@ -249,14 +233,15 @@ namespace shopapp.webui.Controllers
                     return RedirectToAction("ProductList");
                 }
                 TempData.Put("message", new AlertMessage()
-                    {
-                        Title="hata",
-                        Message=_productService.ErrorMessage,
-                        AlertType="danger"
-                    }); 
-            }
-            ViewBag.Categories = _categoryService.GetAll();
-            return View(model);  
+                {
+                    Title="hata",
+                    Message=_productService.ErrorMessage,
+                    AlertType="danger"
+                });                
+
+                return View(model);
+            }            
+            return View(model);         
         }
         public IActionResult CategoryCreate()
         {
